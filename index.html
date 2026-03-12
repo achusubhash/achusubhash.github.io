@@ -1,82 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" type="image/png" href="./src/icon.html/icon.png">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Achu Subhash</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #fafaf8;
+      --surface: #f4f3f0;
+      --border: #e5e3de;
+      --text: #1a1a18;
+      --muted: #888882;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(250,250,248,0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent; transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: var(--border); }
+    .nav-logo { font-family: 'Instrument Serif', serif; font-size: 1.15rem; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-size: 0.82rem; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--text); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 1.5rem 3rem; z-index: 99; flex-direction: column; gap: 1.2rem; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 0.9rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .mobile-menu a:hover { color: var(--text); }
+
+    section { padding: 7rem 0; }
+
+    /* HERO */
+    #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 8rem; position: relative; }
+    .hero-grid { display: grid; grid-template-columns: 1fr auto; gap: 4rem; align-items: center; }
+    .hero-inner { max-width: 620px; }
+    .hero-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; }
+    .hero-label::before { content: ''; width: 32px; height: 1px; background: var(--muted); }
+    .hero-title { font-family: 'Instrument Serif', serif; font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 400; color: var(--text); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.8rem; }
+    .hero-title em { font-style: italic; color: var(--muted); }
+    .hero-desc { font-size: 1rem; color: var(--muted); line-height: 1.85; max-width: 520px; margin-bottom: 3rem; font-weight: 300; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-dark { background: var(--text); color: var(--bg); font-size: 0.82rem; letter-spacing: 0.04em; padding: 0.75rem 1.8rem; border-radius: 2px; text-decoration: none; border: 1px solid var(--text); transition: opacity 0.2s; }
+    .btn-dark:hover { opacity: 0.7; color: var(--bg); }
+    .btn-ghost { background: transparent; color: var(--muted); font-size: 0.82rem; letter-spacing: 0.04em; padding: 0.75rem 1.8rem; border-radius: 2px; text-decoration: none; border: 1px solid var(--border); transition: all 0.2s; }
+    .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+
+    /* HERO PHOTO */
+    .hero-photo-wrap { position: relative; flex-shrink: 0; }
+    .hero-photo {
+      width: 240px; height: 300px;
+      object-fit: cover; object-position: top;
+      border-radius: 4px;
+      filter: grayscale(8%);
+      display: block;
+    }
+    .hero-photo-border {
+      position: absolute;
+      top: 10px; left: 10px;
+      width: 100%; height: 100%;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      z-index: -1;
+    }
+
+    .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; animation: bounce 2s infinite; }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--muted), transparent); }
+
+    .sec-header { margin-bottom: 4rem; }
+    .sec-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .sec-label::before { content: ''; width: 24px; height: 1px; background: var(--muted); }
+    .sec-title { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; color: var(--text); letter-spacing: -0.02em; }
+
+    /* ABOUT */
+    #about { background: var(--surface); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; }
+    .about-text p { font-size: 0.95rem; color: var(--muted); line-height: 1.9; margin-bottom: 1.2rem; }
+    .about-text p strong { color: var(--text); font-weight: 500; }
+    .fact-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .fact-row:first-child { border-top: 1px solid var(--border); }
+    .fact-key { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .fact-val { color: var(--text); font-weight: 300; }
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #2d7a4f; background: #e8f5ee; padding: 3px 10px; border-radius: 20px; }
+    .status-dot { width: 6px; height: 6px; background: #2d7a4f; border-radius: 50%; animation: pulse 2s infinite; }
+
+    /* PROJECTS */
+    #projects { background: var(--bg); }
+    .github-redirect {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 2.5rem 3rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.25s;
+      background: var(--surface);
+    }
+    .github-redirect:hover { border-color: var(--text); background: var(--bg); color: var(--text); }
+    .github-redirect:hover .gh-arrow { transform: translate(4px, -4px); }
+    .gh-left { display: flex; align-items: center; gap: 1.2rem; }
+    .gh-icon { font-size: 1.8rem; line-height: 1; }
+    .gh-title { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 0.2rem; }
+    .gh-sub { font-size: 0.82rem; color: var(--muted); }
+    .gh-arrow { font-size: 1.2rem; color: var(--muted); transition: transform 0.2s; }
+
+    /* CONTACT */
+    #contact { background: var(--surface); }
+    .contact-inner { max-width: 580px; }
+    .contact-desc { font-size: 1rem; color: var(--muted); line-height: 1.85; margin-bottom: 3rem; }
+    .c-link { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--text); font-size: 0.9rem; font-weight: 300; transition: opacity 0.2s; }
+    .c-link:first-child { border-top: 1px solid var(--border); }
+    .c-link:hover { opacity: 0.5; }
+    .c-link-label { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); min-width: 80px; }
+
+    /* FOOTER */
+    footer { background: var(--text); color: rgba(250,250,248,0.4); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 0.75rem; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    footer a { font-size: 0.75rem; color: rgba(250,250,248,0.4); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: rgba(250,250,248,0.9); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-photo-wrap { display: none; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { padding: 1.5rem; }
+      section { padding: 5rem 0; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .project-row { grid-template-columns: 40px 1fr auto; gap: 1rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem; }
+      .hero-scroll { display: none; }
+    }
+  </style>
 </head>
-    <link rel="stylesheet" src="src/style.css">
-    <title>Achu Subhash </title>
+<body>
 
-</head>
-<body class="w3-black">
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">Achu Subhash</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-    <div class="w3-container w3-mobile">
-      
-        <div class="w3-bar w3-hover-none w3-large">
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
 
-            <div class="w3-bar-item w3-hover-none">
-                <a href="index.html">
-                    <img class="w3-round-xlarge " 
-                        style="height:35px;width:35px"
-                         src="src/icon.html/icon.png">
-                </a>
-            </div>
-
-            <a href="contact.html"
-                    class="w3-button w3-bar-item w3-hover-text-aqua w3-hover-none w3-right">Contact</a>
-                
-            <a href="about.html"
-                    class="w3-button w3-bar-item w3-hover-text-aqua w3-hover-none w3-right">About</a>
-
-            <a href="index.html"
-                    class="w3-button w3-bar-item w3-hover-text-aqua w3-hover-none w3-right">Home</a>
-
-        </div>
-    </div>
-    <div class="w3-container w3-display-middle w3-center w3-mobile">
-        <div class="w3-center">
-          <h1><b>Achu &nbsp;<a class="w3-text-aqua">Subhash</a></b></h1>
-            
-          <h2 class="w3-opacity"><b>Programmer &amp; Gamer.</b></h2>
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-inner">
+        <div class="hero-label reveal">IT Student & Developer</div>
+        <h1 class="hero-title reveal delay-1">Building things<br/>for the <em>web.</em></h1>
+        <p class="hero-desc reveal delay-2">Hi, I'm Achu — an Information Technology student based in Latvia. I design and build clean, functional websites and web applications.</p>
+        <div class="hero-actions reveal delay-3">
+          <a href="https://github.com/achusubhash?tab=repositories" target="_blank" class="btn-dark">View Projects</a>
+          <a href="#contact" class="btn-ghost">Get in Touch</a>
         </div>
       </div>
-  
-      <footer 
-            class="w3-content w3-padding-64 w3-text-white w3-xlarge w3-center w3-mobile w3-display-bottommiddle">
-        <a 
-          href="https://www.instagram.com/achusubhash8_/"
-          style="padding:10px;"
-          target="_blank"
-          class="w3-button w3-hover-none w3-hover-text-purple fa fa-instagram">
+      <div class="hero-photo-wrap reveal delay-2">
+        <img src="ghibli.jpg" alt="Achu Subhash" class="hero-photo"/>
+        <div class="hero-photo-border"></div>
+      </div>
+    </div>
+  </div>
+  <a href="#about" class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </a>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-label">Who I am</div>
+      <h2 class="sec-title">About Me</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm <strong>Achu Subhash</strong>, an IT student from India currently studying in <strong>Latvia</strong>. My journey into programming started in high school with Computer Science, and it's grown into a genuine passion.</p>
+        <p>I enjoy building things from scratch — from small tools to complete websites. I believe in clean code, simple design, and doing every task to the best of my ability.</p>
+        <p>Outside of coding, I follow football closely, and anime keeps me motivated when I need a reset.</p>
+      </div>
+      <div class="reveal delay-1">
+        <div class="fact-row"><span class="fact-key">Degree</span><span class="fact-val">B.Sc Information Technology</span></div>
+        <div class="fact-row"><span class="fact-key">Location</span><span class="fact-val">🇱🇻 Latvia</span></div>
+        <div class="fact-row"><span class="fact-key">Origin</span><span class="fact-val">🇮🇳 India</span></div>
+        <div class="fact-row"><span class="fact-key">Interests</span><span class="fact-val">Football · Anime · Gaming</span></div>
+        <div class="fact-row"><span class="fact-key">Status</span><span class="fact-val"><span class="status-badge"><span class="status-dot"></span>Open to work</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-label">What I built</div>
+      <h2 class="sec-title">Projects</h2>
+    </div>
+    <a href="https://github.com/achusubhash?tab=repositories" target="_blank" class="github-redirect reveal">
+      <div class="gh-left">
+        <div class="gh-icon">🐙</div>
+        <div>
+          <div class="gh-title">View all projects on GitHub</div>
+          <div class="gh-sub">github.com/achusubhash</div>
+        </div>
+      </div>
+      <div class="gh-arrow">↗</div>
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="sec-header reveal">
+      <div class="sec-label">Get in touch</div>
+      <h2 class="sec-title">Contact</h2>
+    </div>
+    <div class="contact-inner">
+      <p class="contact-desc reveal">I'm open to new opportunities, collaborations, or just a conversation. Feel free to reach out.</p>
+      <div class="reveal delay-1">
+        <a href="mailto:achusubhash@proton.me" class="c-link">
+          <span class="c-link-label">Email</span>
+          <span>achusubhash@proton.me</span>
+          <span>↗</span>
         </a>
-        
-        <a
-          href="https://github.com/achusubhash/"
-          style="padding:10px;"  target="_blank"
-          class="w3-button w3-hover-none w3-hover-text-grey fa fa-github">
+        <a href="https://github.com/achusubhash" target="_blank" class="c-link">
+          <span class="c-link-label">GitHub</span>
+          <span>github.com/achusubhash</span>
+          <span>↗</span>
         </a>
-  
-        <a
-          href="mailto:achusubhash@proton.me"
-          style="padding:10px;"
-          target="_blank"
-          class="w3-button w3-hover-none w3-hover-text-red fa fa-envelope">
+        <a href="https://www.instagram.com/achusubhash8_" target="_blank" class="c-link">
+          <span class="c-link-label">Instagram</span>
+          <span>@achusubhash8_</span>
+          <span>↗</span>
         </a>
-        
-        <p class="w3-medium">
-          Powered by 
-        <a
-          href="https://www.w3schools.com/w3css/default.asp"
-          target="_blank"
-          class="w3-hover-text-green"
-          style="text-decoration: none;">w3.css</a>
-        </p>
-      
-      </footer>
-<script src="./src/script.js"></script>
+        <a href="https://x.com/achusubhash8" target="_blank" class="c-link">
+          <span class="c-link-label">X / Twitter</span>
+          <span>@achusubhash8</span>
+          <span>↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Achu Subhash</span>
+  <div class="footer-links">
+    <a href="https://github.com/achusubhash" target="_blank">GitHub</a>
+    <a href="https://www.instagram.com/achusubhash8_" target="_blank">Instagram</a>
+    <a href="https://x.com/achusubhash8" target="_blank">X</a>
+    <a href="#hero">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+</script>
 </body>
 </html>
